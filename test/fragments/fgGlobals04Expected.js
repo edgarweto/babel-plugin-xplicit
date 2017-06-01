@@ -1,0 +1,1 @@
+console.assert(myValue === 1);

@@ -6,8 +6,7 @@ const DEFAULT_OPTIONS = {
 };
 
 /**
- * @desc This trace plugin keeps the trace number, which is increased for each
- *  found trace label. We use this object to save its internal, static state.
+ * @desc
  */
 const pluginState = {
   count: function () {
@@ -22,7 +21,14 @@ const pluginState = {
 };
 
 const _toExpression = function (node) {
-  return node.expression || node;
+  let expr = node.expression || node;
+
+  // For sequence expression, capture only first one
+  if (node.type === 'SequenceExpression') {
+    console.log('SequenceExpression!!', node);
+    return node.expressions[0];
+  }
+  return expr;
 };
 
 
@@ -62,6 +68,7 @@ const plugin = function ({types: t}) {
       }
     },
 
+    /* NO: remove block statement support */
     BlockStatement: function (path, node, scope, opts) {
       const scopeName = scope.scopeName;
       
@@ -90,52 +97,109 @@ const plugin = function ({types: t}) {
     }
   };
 
+  function _validateOptions(path, options) {
+    let valid = true,
+      reason = "";
 
+
+
+    if (!valid) {
+      throw path.buildCodeFrameError(`Invalid plugin params: ${reason}`);
+    }
+  }
+
+  function _extractParams(path) {
+    const lblBodyType = path.node.body.type,
+      lblBodyExpression = path.node.body.expression;
+
+    if (lblBodyExpression && lblBodyExpression.type === 'SequenceExpression') {
+      const params = Array.isArray(lblBodyExpression.expressions) && lblBodyExpression.expressions.length ? lblBodyExpression.expressions[1] : null;
+
+      if (params && params.type === 'ObjectExpression') {
+        const properties = params.properties;
+
+        if (Array.isArray(properties)) {
+          let parameters = {};
+          properties.forEach(function (prop) {
+            parameters[prop.key.name] = prop.value.value;
+          });
+          return parameters;
+        }
+      }
+    }
+    return null;
+  }
+
+
+  // Return the plugin object
   return {
     visitor: {
       LabeledStatement(path, state) {
         const options = state.opts,
-          labelName = path.node.label.name,
-          asserter = options[labelName] || DEFAULT_OPTIONS.verbs[labelName];
+          labelName = path.node.label.name;
+
+        _validateOptions(path, options);
+
+        const asserter = (options.verbs && options.verbs[labelName]) || DEFAULT_OPTIONS.verbs[labelName];
+
+// console.log("-------------");
+// console.log("[LabeledStatement] options:", options);
+// console.log("[LabeledStatement] labelName:", labelName);
+// console.log("[LabeledStatement] asserter:", asserter);
+// console.log("-------------");
+
 
         if (asserter) {
           if (options.strip) {
             path.remove();
           } else {
 
-            // 1. Process message: function's name, line and column.
-            const parentFn = path.getFunctionParent(),
-              globalScopeName = state.opts.globalScopeName || DEFAULT_OPTIONS.globalScopeName,
-              fnName = parentFn && parentFn.node.id && parentFn.node.id.name || false;
+            // Strip of assertions can happen independently, so first check for removal
+            let removed = false;
+            if (Array.isArray(options.filter)) {
+              const params = _extractParams(path);
+              let shouldRemove = false;
 
-            let scopeName = parentFn && parentFn.node.id && parentFn.node.id.name || globalScopeName;
-
-            // If  there is no function name, try to check if we are inside class member functions
-            if (!fnName) {
-              const classMethod = path.findParent((classMethod) => classMethod.isClassMethod());
-              scopeName = classMethod ? classMethod.node.key.name : scopeName;
-
-              const classDef = path.findParent((classMethod) => classMethod.isClassDeclaration());
-              if (classDef) {
-                const classname = classDef.node.id.name;
-                scopeName = classname + '::' + scopeName;
+              if (!params || !params.filter || !options.filter.includes(params.filter)) {
+                  path.remove();
+                  removed = true;
               }
-
             }
 
-            // 2. Process the body
-            const assertCode = generateCode(path, path.node.body, {
-              scopeName: scopeName
-            }, {
-              genAssert: true,
-              asserterFn: asserter
-            });
+            if (!removed) {
+              // 1. Process message: function's name, line and column.
+              const parentFn = path.getFunctionParent(),
+                globalScopeName = state.opts.globalScopeName || DEFAULT_OPTIONS.globalScopeName,
+                fnName = parentFn && parentFn.node.id && parentFn.node.id.name || false;
 
+              let scopeName = parentFn && parentFn.node.id && parentFn.node.id.name || globalScopeName;
 
-            if (Array.isArray(assertCode)) {
-              path.replaceWithMultiple(assertCode);
-            } else {
-              path.replaceWith(assertCode);
+              // If  there is no function name, try to check if we are inside class member functions
+              if (!fnName) {
+                const classMethod = path.findParent((classMethod) => classMethod.isClassMethod());
+                scopeName = classMethod ? classMethod.node.key.name : scopeName;
+
+                const classDef = path.findParent((classMethod) => classMethod.isClassDeclaration());
+                if (classDef) {
+                  const classname = classDef.node.id.name;
+                  scopeName = classname + '::' + scopeName;
+                }
+
+              }
+
+              // 2. Process the body
+              const assertCode = generateCode(path, path.node.body, {
+                scopeName: scopeName
+              }, {
+                genAssert: true,
+                asserterFn: asserter
+              });
+
+              if (Array.isArray(assertCode)) {
+                path.replaceWithMultiple(assertCode);
+              } else {
+                path.replaceWith(assertCode);
+              }
             }
           }
         }

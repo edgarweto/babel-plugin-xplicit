@@ -27,6 +27,35 @@ const fragments = [{
   }, {
     file: 'fgGlobals02',
     env: DEFINITIONS.envDev
+  }, {
+    file: 'fgGlobals03',
+    env: DEFINITIONS.envDev,
+    options: {
+      verbs: {
+        myAssertLabel: "_myAssertFunction"
+      }
+    }
+  }, {
+    file: 'fgGlobals04',
+    env: DEFINITIONS.envDev,
+    options: {
+      filter: ['jrambo']
+    }
+  }, {
+    file: 'fgGlobals05',
+    env: DEFINITIONS.envDev
+  // }, {
+  //   file: 'fgGlobals06',
+  //   env: DEFINITIONS.envDev,
+  //   options: {
+  //     conditional: "_dbg_assert"
+  //   }
+  // }, {
+  //   file: 'fgGlobals07',
+  //   env: DEFINITIONS.envDev,
+  //   options: {
+  //     log: "_myAssertLogFn"
+  //   }
   }];
 
 
