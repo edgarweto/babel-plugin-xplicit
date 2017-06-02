@@ -24,14 +24,12 @@ const _toExpression = function (node) {
   let expr = node.expression || node;
 
   // For sequence expression, capture only first one
-  if (node.type === 'SequenceExpression') {
-    console.log('SequenceExpression!!', node);
-    return node.expressions[0];
+  if (expr.type === 'SequenceExpression') {
+    //console.log('SequenceExpression!!', node);
+    return expr.expressions[0];
   }
   return expr;
 };
-
-
 
 
 const plugin = function ({types: t}) {
@@ -50,6 +48,9 @@ const plugin = function ({types: t}) {
   const assertBodyVisitor = {
 
     ExpressionStatement: function (path, node, scope, opts) {
+
+      const expression = _toExpression(node);
+
       if (opts.genAssert) {
         const scopeName = scope.scopeName,
           msg = "[" + pluginState.count() + "]" + (scopeName ? " " + scopeName : "") + ": ";
@@ -57,14 +58,16 @@ const plugin = function ({types: t}) {
         const withMessage = false;
         let params = [];
 
+
+
         if (withMessage) {
-          params = [node.expression, t.stringLiteral(msg)];
+          params = [expression, t.stringLiteral(msg)];
         } else {
-          params = [node.expression];
+          params = [expression];
         }
         return t.expressionStatement(t.callExpression(t.identifier(opts.asserterFn), params));
       } else {
-        return node.expression;
+        return expression;
       }
     },
 
