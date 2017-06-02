@@ -22,13 +22,13 @@ describe('Plugin definition', function () {
  * @desc List of fragments to be tested.
  */
 const fragments = [{
-    file: 'fgGlobals01',
+    file: 'isolated/fg01-Basic',
     env: DEFINITIONS.envProd
   }, {
-    file: 'fgGlobals02',
+    file: 'isolated/fg02-Basic',
     env: DEFINITIONS.envDev
   }, {
-    file: 'fgGlobals03',
+    file: 'isolated/fg03-CustomLabel',
     env: DEFINITIONS.envDev,
     options: {
       verbs: {
@@ -36,22 +36,22 @@ const fragments = [{
       }
     }
   }, {
-    file: 'fgGlobals04',
+    file: 'isolated/fg04-Filter',
     env: DEFINITIONS.envDev,
     options: {
       filter: ['jrambo']
     }
   }, {
-    file: 'fgGlobals05',
+    file: 'isolated/fg05-Filter',
     env: DEFINITIONS.envDev
+  }, {
+    file: 'isolated/fg06-Flag',
+    env: DEFINITIONS.envDev,
+    options: {
+      conditional: "_dbg_assert"
+    }
   // }, {
-  //   file: 'fgGlobals06',
-  //   env: DEFINITIONS.envDev,
-  //   options: {
-  //     conditional: "_dbg_assert"
-  //   }
-  // }, {
-  //   file: 'fgGlobals07',
+  //   file: 'isolated/fg07-Log',
   //   env: DEFINITIONS.envDev,
   //   options: {
   //     log: "_myAssertLogFn"

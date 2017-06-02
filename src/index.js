@@ -24,8 +24,8 @@ const _toExpression = function (node) {
   let expr = node.expression || node;
 
   // For sequence expression, capture only first one
+  // Remaining expressions should be a BlockStatement used for options
   if (expr.type === 'SequenceExpression') {
-    //console.log('SequenceExpression!!', node);
     return expr.expressions[0];
   }
   return expr;
@@ -65,14 +65,24 @@ const plugin = function ({types: t}) {
         } else {
           params = [expression];
         }
-        return t.expressionStatement(t.callExpression(t.identifier(opts.asserterFn), params));
+
+        const theAssertion = t.callExpression(t.identifier(opts.asserterFn), params);
+
+        // Check if we want a global conditional var to enable/disable assertions at runtime
+        if (opts.options && opts.options.conditional) {
+
+          const condIdentifier = t.identifier(opts.options.conditional);
+          return t.logicalExpression("&&", condIdentifier, theAssertion);
+        } else {
+          return t.expressionStatement(theAssertion);
+        }
       } else {
         return expression;
       }
     },
 
     /* NO: remove block statement support */
-    BlockStatement: function (path, node, scope, opts) {
+/*    BlockStatement: function (path, node, scope, opts) {
       const scopeName = scope.scopeName;
       
       const statements = [];
@@ -93,7 +103,7 @@ const plugin = function ({types: t}) {
         }
       });
       return statements;
-    },
+    },*/
 
     EmptyStatement: function (path, node, scope, opts) {
       return [];
@@ -104,7 +114,7 @@ const plugin = function ({types: t}) {
     let valid = true,
       reason = "";
 
-
+    //TODO
 
     if (!valid) {
       throw path.buildCodeFrameError(`Invalid plugin params: ${reason}`);
@@ -170,6 +180,7 @@ const plugin = function ({types: t}) {
             }
 
             if (!removed) {
+
               // 1. Process message: function's name, line and column.
               const parentFn = path.getFunctionParent(),
                 globalScopeName = state.opts.globalScopeName || DEFAULT_OPTIONS.globalScopeName,
@@ -195,7 +206,8 @@ const plugin = function ({types: t}) {
                 scopeName: scopeName
               }, {
                 genAssert: true,
-                asserterFn: asserter
+                asserterFn: asserter,
+                options: options
               });
 
               if (Array.isArray(assertCode)) {
