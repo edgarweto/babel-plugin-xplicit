@@ -62,6 +62,15 @@ const plugin = function ({types: t}) {
 
         if (withMessage) {
           params = [expression, t.stringLiteral(msg)];
+        } else if (opts.options.log) {
+          const line = 0,
+            col = 0;
+
+          let objExpr = t.objectExpression([
+            t.objectProperty(t.identifier("line"), t.numericLiteral(line)),
+            t.objectProperty(t.identifier("column"), t.numericLiteral(col))
+          ]);
+          params = [expression, objExpr];
         } else {
           params = [expression];
         }
@@ -153,7 +162,11 @@ const plugin = function ({types: t}) {
 
         _validateOptions(path, options);
 
-        const asserter = (options.verbs && options.verbs[labelName]) || DEFAULT_OPTIONS.verbs[labelName];
+        // For the assert function, first try with a logger, then with a custom
+        // assertion function and finally take the default.
+        const logFn = options.log,
+          asserterFn = options.verbs && options.verbs[labelName],
+          asserter = logFn || asserterFn || DEFAULT_OPTIONS.verbs[labelName];
 
 // console.log("-------------");
 // console.log("[LabeledStatement] options:", options);

@@ -1,1 +1,4 @@
-assert: true === false;
+assert: {
+  true === false,
+  true === true;
+}

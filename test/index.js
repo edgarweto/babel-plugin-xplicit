@@ -50,12 +50,12 @@ const fragments = [{
     options: {
       conditional: "_dbg_assert"
     }
-  // }, {
-  //   file: 'isolated/fg07-Log',
-  //   env: DEFINITIONS.envDev,
-  //   options: {
-  //     log: "_myAssertLogFn"
-  //   }
+  }, {
+    file: 'isolated/fg07-Log',
+    env: DEFINITIONS.envDev,
+    options: {
+      log: "_myAssertLogFn"
+    }
   }];
 
 
