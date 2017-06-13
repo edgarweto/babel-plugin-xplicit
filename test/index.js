@@ -56,12 +56,52 @@ const fragments = [{
     options: {
       log: "_myAssertLogFn"
     }
+  }, {
+    file: 'isolated/fg08-Block',
+    env: DEFINITIONS.envDev,
+    fail: true
+  }, {
+    file: 'mixed/fg01-Basic',
+    env: DEFINITIONS.envProd
+  }, {
+    file: 'mixed/fg02-Basic',
+    env: DEFINITIONS.envDev
+  }, {
+    file: 'mixed/fg03-CustomLabel',
+    env: DEFINITIONS.envDev,
+    options: {
+      verbs: {
+        myAssertLabel: "_myAssertFunction"
+      }
+    }
+  }, {
+    file: 'mixed/fg04-Filter',
+    env: DEFINITIONS.envDev,
+    options: {
+      filter: ['jrambo']
+    }
+  }, {
+    file: 'mixed/fg05-Filter',
+    env: DEFINITIONS.envDev
+  }, {
+    file: 'mixed/fg06-Flag',
+    env: DEFINITIONS.envDev,
+    options: {
+      conditional: "_dbg_assert"
+    }
+  }, {
+    file: 'mixed/fg07-Log',
+    env: DEFINITIONS.envDev,
+    options: {
+      log: "_myAssertLogFn"
+    }
   }];
 
 
 describe('Fragments', function () {
   fragments.forEach(function (fragment) {
       if (fragment.fail) {
+        failWithException(plugin, fragment);
       } else {
         it(`'test fragment '${fragment.file}'`, function (done) {
           const transpiled = transpileFragment(plugin, fragment),
@@ -98,4 +138,29 @@ function transpileFragment(plugin, fragment) {
  */
 function uniformifyJs(code) {
   return code.replace(/(\r\n|\n|\r|\s+)/gm, "");
+}
+
+/**
+ * @desc Tries to transpile the code capturing an expected exception.
+ * @param {object} plugin The plugin object.
+ * @param {object} fragment A fragment object.
+ */
+function failWithException(plugin, fragment) {
+  it(`fragment '${fragment.file}' should fail with an exception`, function (done) {
+
+    let fail = false;
+    try {
+      transpileFragment(plugin, fragment);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        fail = true;
+      } else {
+        throw error;
+      }
+    }
+
+    assert.equal(fail, true);
+
+    done();
+  });
 }

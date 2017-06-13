@@ -1,1 +1,2 @@
-_myAssertLogFn(true === false, {line:0, column:0});
+_myAssertLogFn(true === false, {line:1, column:8});
+_myAssertLogFn(false === false, {line:2, column:8});

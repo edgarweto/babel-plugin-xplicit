@@ -63,8 +63,9 @@ const plugin = function ({types: t}) {
         if (withMessage) {
           params = [expression, t.stringLiteral(msg)];
         } else if (opts.options.log) {
-          const line = 0,
-            col = 0;
+          const startLoc = node.loc.start,
+            line = startLoc && startLoc.line,
+            col = startLoc && startLoc.column;
 
           let objExpr = t.objectExpression([
             t.objectProperty(t.identifier("line"), t.numericLiteral(line)),
