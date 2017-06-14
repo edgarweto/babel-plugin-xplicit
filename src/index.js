@@ -60,9 +60,9 @@ const plugin = function ({types: t}) {
 
 
 
-        if (withMessage) {
+        if (opts.scopeNamed) {
           params = [expression, t.stringLiteral(msg)];
-        } else if (opts.options.log) {
+        } else if (opts.options.position) {
           const startLoc = node.loc.start,
             line = startLoc && startLoc.line,
             col = startLoc && startLoc.column;
@@ -165,9 +165,8 @@ const plugin = function ({types: t}) {
 
         // For the assert function, first try with a logger, then with a custom
         // assertion function and finally take the default.
-        const logFn = options.log,
-          asserterFn = options.verbs && options.verbs[labelName],
-          asserter = logFn || asserterFn || DEFAULT_OPTIONS.verbs[labelName];
+        const asserterFn = options.verbs && options.verbs[labelName],
+          asserter = asserterFn || DEFAULT_OPTIONS.verbs[labelName];
 
 // console.log("-------------");
 // console.log("[LabeledStatement] options:", options);

@@ -51,10 +51,10 @@ const fragments = [{
       conditional: "_dbg_assert"
     }
   }, {
-    file: 'isolated/fg07-Log',
+    file: 'isolated/fg07-Position',
     env: DEFINITIONS.envDev,
     options: {
-      log: "_myAssertLogFn"
+      position: true
     }
   }, {
     file: 'isolated/fg08-Block',
@@ -90,11 +90,30 @@ const fragments = [{
       conditional: "_dbg_assert"
     }
   }, {
-    file: 'mixed/fg07-Log',
+    file: 'mixed/fg07-Position',
     env: DEFINITIONS.envDev,
     options: {
-      log: "_myAssertLogFn"
+      position: true
     }
+  }, {
+    file: 'mixed/fg08-Mixed',
+    env: DEFINITIONS.envDev,
+    options: {
+      verbs: {
+        myAssertLabel: "_myAssert",
+        myAssert2: "_myAssert2",
+        myAssert3: "_myAssert3"
+      },
+      conditional: "_dbg_assert",
+      filter: ['jrambo', 'jtwo'],
+      position: true
+    }
+  // }, {
+  //   file: 'mixed/fg09-ScopeName',
+  //   env: DEFINITIONS.envDev,
+  //   options: {
+  //     scopeNamed: true
+  //   }
   }];
 
 
