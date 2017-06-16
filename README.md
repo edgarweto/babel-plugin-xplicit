@@ -1,8 +1,8 @@
 
-Javascript Assertions
+Javascript Assertions with xplicit
 ====
 
-### Assert javascript code
+## Assert javascript code
 
 ```js
 class Sphere {
@@ -24,8 +24,7 @@ class Sphere {
 
 
 ## This repository
-Xplicit is a babel plugin that enables a clean assertion aproach for javascript. I was inspired by Charles Pick's use of javascript label statement in his [babel-plugin-contracts](https://github.com/codemix/babel-plugin-contracts)
-
+Xplicit is a babel plugin that enables a simple assertion aproach for javascript. It was inspired by Charles Pick's use of javascript labeled statement in his [babel-plugin-contracts](https://github.com/codemix/babel-plugin-contracts).
 
 [Babel](https://babeljs.io/) enables us to transform our assertion expressions, add some log information and probably the most important point, to strip code.
 
@@ -34,15 +33,13 @@ Xplicit is a babel plugin that enables a clean assertion aproach for javascript.
 
 
 ## Asserting javascript code
- Asserting is a simplification aproach to [design by contract](https://en.wikipedia.org/wiki/Design_by_contract), but it still is a strong way to write consistent code.
+ Asserting is a simplified aproach to [design by contract](https://en.wikipedia.org/wiki/Design_by_contract), but strong enough to enable programmers to write consistent code. With this plugin, it is possible to write pre and post conditions and invariants, but the responsibility of writing them at the right place is left to the programmer.
 
- Why to remove pre, post and invariants: because they are replicable with only one assertion functionality, leaving to the programmer the responsibility to use it well.
-
- This plugin is a minimum implementation for [javascript assertion](http://privaliait.blogspot.com.es/2017/04/javascript-assert-best-practices.html).
+ You may be interested in some tips for [javascript assertion](http://privaliait.blogspot.com.es/2017/04/javascript-assert-best-practices.html).
 
 
 ### Installation
-As you are going to use it while developing only, install it with npm --save-dev:
+Just like other babel plugins:
 
 ```sh
 npm install --save-dev babel-plugin-xplicit
@@ -88,21 +85,27 @@ class Sphere {
 ```
 
 
-
 #### Option: strip assertions
 Probably one of the most important options is simply to strip all assertions in production environments.
 
+```json
+{
+  "strip": true
+}
+```
+
 #### Option: verbs
-This is the way you can personalize the actual assertion function. It also allows you to specify the labels that you are going to use to assert. So you could use something like this:
+This is the way you can customize the actual assertion function. It also allows you to specify the labels that you are going to use to assert. So you could use something like this:
 
 ```json
 {
-  verbs: {
-    assert: "console.assert",
-    assert_log: "myAssertFunction"
+  "verbs": {
+    "assert": "console.assert",
+    "assert_log": "myAssertFunction"
   }
 }
 ```
+
 Then you can use these labels to assert:
 
 ```js
@@ -115,7 +118,7 @@ setRadius (r) {
 }
 ```
 
-This enables customization of both labels and functions that actually manage assertion violation (where you can throw an exception, or log, or simply notify the developer via other ways).
+This would transpile to this:
 
 
 ```js
@@ -129,8 +132,45 @@ setRadius (r) {
 ```
 
 
-
 #### Option: filters
+When assertions of one programmer affect other programmer (because it is continuously failing), we can filter
+them. This option strips all assertions except the ones we mark with an alias.
+
+```json
+{
+  "filter": [
+    "jrambo"
+  ]
+}
+```
+
+Then, only asserts with 'jrambo' filter will survive:
+
+
+```js
+setRadius (r) {
+  assert: r > 0;
+  
+  this._radius = r;
+
+  assert: this._radius > 0, {filter: 'jrambo'};
+}
+```
+
+This would transpile to this:
+
+
+```js
+setRadius (r) {
+  this._radius = r;
+
+  console.assert(this._radius > 0);
+}
+```
+
+
+
+
 
 #### Option: conditional
 
