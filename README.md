@@ -168,14 +168,46 @@ setRadius (r) {
 }
 ```
 
-
-
-
-
 #### Option: conditional
 
-#### Option: position
+It is also possible to activate assertions in runtime (if the strip option is not used) using a global activation variable:
 
+```json
+{
+  "conditional": "_dbg_assert"
+}
+```
+Then in the transpiled code, assertions will be checked only if the variable is evaluated as true:
+
+```js
+setRadius (r) {
+  this._radius = r;
+
+  _dbg_assert && console.assert(this._radius > 0);
+}
+```
+You should define and assign a value to it.
+
+
+#### Option: position
+This option adds information about where the assert is located, adding an object indicating line and column to the assertion call:
+
+```json
+{
+  "position": true
+}
+```
+
+Once transpiled:
+
+
+```js
+setRadius (r) {
+  this._radius = r;
+
+  console.assert(this._radius > 0, {line: 19, column: 4});
+}
+```
 
 
 ### Contributing
