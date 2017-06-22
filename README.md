@@ -29,7 +29,8 @@ Xplicit is a babel plugin that enables a simple assertion aproach for javascript
 [Babel](https://babeljs.io/) enables us to transform our assertion expressions, add some log information and probably the most important point, to strip code.
 
 
-[![Build Status](https://travis-ci.org/edgarweto/babel-plugin-xplicit.svg)](https://travis-ci.org/edgarweto/babel-plugin-xplicit)
+[![Build Status](travis-image)][travis-url]
+[![License][license-image]][license-url]
 
 
 ## Asserting javascript code
@@ -209,7 +210,10 @@ setRadius (r) {
 }
 ```
 
+#### LICENSE
+Licensed under the [MIT](https://github.com/unassert-js/babel-plugin-unassert/blob/master/LICENSE) license.
 
-### Contributing
-
-Please see [Contributing to Xplicit](/CONTRIBUTING.md) for the most up-to-date information on contributing this repository.
+[travis-url]: https://api.travis-ci.org/edgarweto/babel-plugin-xplicit
+[travis-image]: https://api.travis-ci.org/edgarweto/babel-plugin-xplicit.svg
+[license-url]: https://github.com/edgarweto/babel-plugin-xplicit/blob/master/LICENSE
+[license-image]: https://img.shields.io/badge/license-MIT-brightgreen.svg
