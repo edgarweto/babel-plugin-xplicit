@@ -29,7 +29,7 @@ Xplicit is a babel plugin that enables a simple assertion aproach for javascript
 [Babel](https://babeljs.io/) enables us to transform our assertion expressions, add some log information and probably the most important point, to strip code.
 
 
-[![Build Status](travis-image)][travis-url]
+[![Build Status][travis-image]][travis-url]
 [![License][license-image]][license-url]
 
 
