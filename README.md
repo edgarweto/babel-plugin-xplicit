@@ -133,7 +133,7 @@ setRadius (r) {
 
 
 #### Option: filters
-When assertions of one programmer affect other programmer (because it is continuously failing), we can filter
+When assertions of one programmer affect other programmer (because they are continuously failing), we can filter
 them. This option strips all assertions except the ones we mark with an alias.
 
 ```json
@@ -190,7 +190,7 @@ You should define and assign a value to it.
 
 
 #### Option: position
-This option adds information about where the assert is located, adding an object indicating line and column to the assertion call:
+This option adds information about where the assert is located, adding an object indicating line and column of the assertion call:
 
 ```json
 {
