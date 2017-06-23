@@ -1,22 +1,33 @@
 {
   "name": "babel-plugin-xplicit",
   "version": "1.0.0",
-  "description": "",
+  "description": "Make your contracts explicit with javascript assertions powered by babel.",
   "scripts": {
     "build": "babel ./src -d ./lib",
+    "prepublish": "npm run build",
     "test": "mocha --reporter spec"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://komono@bitbucket.org/komono/babel-plugin-xplicit.git"
+    "url": "git+https://github.com/edgarweto/babel-plugin-xplicit"
   },
-  "author": "",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/komono/babel-plugin-xplicit#readme",
+  "author": {
+    "name": "Edgar Gueto",
+    "email": "komono.32@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/edgarweto/babel-plugin-xplicit",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.5.1",
     "chai": "^4.0.0",
     "mocha": "^3.4.2"
-  }
+  },
+  "keywords": [
+    "contracts",
+    "assert",
+    "javascript",
+    "dbc",
+    "babel"
+  ],
 }

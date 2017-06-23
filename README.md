@@ -46,7 +46,7 @@ Just like other babel plugins:
 npm install --save-dev babel-plugin-xplicit
 ```
 
-### Asserting your code
+### Example of code assertions:
 
 ```js
 class Sphere {
@@ -82,6 +82,30 @@ class Sphere {
 
     this._radius = r;
   }
+}
+```
+
+#### How to use
+
+Just as other babel plugins, you can use your .baberc to configure the plugin:
+
+```json
+{
+  "plugins": [
+    ["xplicit", {
+      "env": {
+        "develop": {
+          "verbs": {
+            "assert": "console.assert"
+          },
+          "conditional": "_is_assert_active"
+        },
+        "production": {
+          "strip": true
+        }
+      }
+    }]
+  ]
 }
 ```
 

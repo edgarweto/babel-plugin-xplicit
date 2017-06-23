@@ -91,30 +91,6 @@ const plugin = function ({types: t}) {
       }
     },
 
-    /* NO: remove block statement support */
-/*    BlockStatement: function (path, node, scope, opts) {
-      const scopeName = scope.scopeName;
-      
-      const statements = [];
-      node.body.forEach(function (stmt) {
-
-        if (opts.genAssert) {
-          let msg = "[" + pluginState.count() + "]" + (scopeName ? " " + scopeName : "") + ": ";
-
-          statements.push(t.expressionStatement(t.callExpression(t.identifier(opts.asserterFn), [
-            t.stringLiteral(msg),
-            _toExpression(generateCode(path, stmt, scope, {
-              genAssert: false,
-              asserterFn: opts.asserterFn
-            }))
-          ])));
-        } else {
-          statements.push(_toExpression(generateCode(path, stmt, scope, opts)));
-        }
-      });
-      return statements;
-    },*/
-
     EmptyStatement: function (path, node, scope, opts) {
       return [];
     }
@@ -168,11 +144,6 @@ const plugin = function ({types: t}) {
         const asserterFn = options.verbs && options.verbs[labelName],
           asserter = asserterFn || DEFAULT_OPTIONS.verbs[labelName];
 
-// console.log("-------------");
-// console.log("[LabeledStatement] options:", options);
-// console.log("[LabeledStatement] labelName:", labelName);
-// console.log("[LabeledStatement] asserter:", asserter);
-// console.log("-------------");
 
 
         if (asserter) {
