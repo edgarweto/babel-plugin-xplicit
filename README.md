@@ -87,25 +87,40 @@ class Sphere {
 
 #### How to use
 
-Just as other babel plugins, you can use your .baberc to configure the plugin:
+Just as other babel plugins, you can use your .babelrc to configure the plugin:
 
 ```json
 {
-  "plugins": [
-    ["xplicit", {
-      "env": {
-        "develop": {
+  "presets": {...},
+  "env": {
+    "development": {
+      "plugins": [
+        ["xplicit", {
           "verbs": {
-            "assert": "console.assert"
+            "assert": "myAssert"
           },
           "conditional": "_is_assert_active"
-        },
-        "production": {
+        }]
+      ]
+    },
+    "production": {
+      "plugins": [
+        ["xplicit", {
           "strip": true
-        }
-      }
-    }]
-  ]
+        }]
+      ]
+    }
+  }
+}
+```
+
+Then you can set the environment, for example, in you package.json:
+
+```json
+{
+  "build": "babel ./src -d ./lib",
+  "dev": "BABEL_ENV=development npm run build",
+  "pub": "BABEL_ENV=production npm run build",
 }
 ```
 
